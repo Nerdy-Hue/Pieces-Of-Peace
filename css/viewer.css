@@ -1,0 +1,31 @@
+/* ---------- Product viewer widget (assets/js/product-viewer.js) ---------- */
+.pv-root{display:flex;flex-direction:column;gap:14px;outline:none}
+.pv-stage{position:relative;width:100%;aspect-ratio:16/9;background:#14161a;border:2px solid var(--ink);overflow:hidden;cursor:grab;touch-action:none;perspective:900px;display:flex;align-items:center;justify-content:center}
+.pv-stage.pv-active{cursor:grabbing}
+.pv-img{width:88%;height:88%;object-fit:contain;user-select:none;-webkit-user-drag:none;will-change:transform}
+.pv-spin .pv-img{transform:none}
+.pv-hint{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:rgba(16,17,19,.78);color:var(--paper);font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.02em;padding:6px 14px;border-radius:20px;pointer-events:none;transition:opacity .25s ease;white-space:nowrap}
+
+.pv-controls{display:flex;align-items:center;gap:10px}
+.pv-btn{flex:0 0 auto;width:34px;height:34px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);font-size:1.1rem;line-height:1;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.pv-btn:hover{background:var(--ink);color:var(--paper)}
+.pv-slider{flex:1;appearance:none;-webkit-appearance:none;height:4px;background:var(--silver);border-radius:2px;outline:none}
+.pv-slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--gold);border:2px solid var(--ink);cursor:pointer}
+.pv-slider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--gold);border:2px solid var(--ink);cursor:pointer}
+
+/* Badge/button on a product card that opens the viewer modal */
+.card-viewer-open{position:relative}
+.pv-badge{position:absolute;top:10px;right:10px;background:var(--ink);color:var(--paper);border:2px solid var(--ink);font-family:'IBM Plex Mono',monospace;font-size:.68rem;font-weight:600;padding:5px 10px;border-radius:20px;display:flex;align-items:center;gap:5px;z-index:2}
+.pv-badge:hover{background:var(--turquoise);border-color:var(--ink)}
+
+/* Modal shell that hosts a pv-root at a larger size */
+.pv-modal-overlay{position:fixed;inset:0;background:rgba(16,17,19,.82);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.pv-modal-overlay.open{display:flex}
+.pv-modal{background:var(--charcoal);border:2px solid var(--paper);max-width:720px;width:100%;padding:20px;position:relative}
+.pv-modal-close{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--paper);font-size:1.6rem;line-height:1;cursor:pointer;z-index:3}
+.pv-modal h3{font-size:1.05rem;font-family:'IBM Plex Sans',sans-serif;font-weight:600;margin-bottom:14px;padding-right:30px}
+.pv-modal-note{font-size:.78rem;color:var(--ash-light);margin-top:10px;line-height:1.4}
+
+@media (max-width:560px){
+  .pv-modal{padding:16px}
+}

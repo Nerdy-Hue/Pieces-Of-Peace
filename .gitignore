@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.env
+.env.local
+data/orders/
+*.log
+.DS_Store
