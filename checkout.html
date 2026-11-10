@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Checkout — PIECES OF PEACE</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect fill='%23D8A821' width='16' height='16'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <div class="wrap headerbar">
+    <a href="index.html" class="logo">PIECES OF PEACE<sup>&trade;</sup></a>
+    <nav id="mainNav">
+      <a href="index.html#shop">Shop</a>
+      <a href="index.html#about">About</a>
+    </nav>
+    <div class="header-tools">
+      <button class="cart-btn" id="cartOpenBtn" aria-haspopup="dialog">Bag <span class="cart-count" id="cartCount">0</span></button>
+      <button class="mobile-nav-toggle" id="navToggle" aria-label="Toggle menu">&#9776;</button>
+    </div>
+  </div>
+</header>
+<main class="section page-main">
+  <div class="wrap narrow">
+    <h1>Checkout</h1>
+    <p class="lede">Where should we send it? You'll pay on PayFast next. Card details stay on their site.</p>
+    <div class="order-summary" id="orderSummary"></div>
+    <form id="checkoutForm" class="form-grid">
+      <div class="hp" aria-hidden="true"><label>Company<input name="company" tabindex="-1" autocomplete="off"></label></div>
+      <div class="full"><label for="name">Full name</label><input id="name" name="name" autocomplete="name" required maxlength="80"></div>
+      <div><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required maxlength="100"></div>
+      <div><label for="phone">Phone</label><input id="phone" name="phone" type="tel" autocomplete="tel" required placeholder="082 123 4567"></div>
+      <div class="full"><label for="line1">Street address</label><input id="line1" name="line1" autocomplete="address-line1" required maxlength="100"></div>
+      <div class="full"><label for="line2">Apartment, unit (optional)</label><input id="line2" name="line2" autocomplete="address-line2" maxlength="100"></div>
+      <div><label for="suburb">Suburb</label><input id="suburb" name="suburb" autocomplete="address-level3" required maxlength="60"></div>
+      <div><label for="city">City</label><input id="city" name="city" autocomplete="address-level2" required maxlength="60"></div>
+      <div><label for="province">Province</label>
+        <select id="province" name="province" autocomplete="address-level1" required>
+          <option value="">Choose</option>
+          <option>Eastern Cape</option>
+          <option>Free State</option>
+          <option>Gauteng</option>
+          <option>KwaZulu-Natal</option>
+          <option>Limpopo</option>
+          <option>Mpumalanga</option>
+          <option>Northern Cape</option>
+          <option>North West</option>
+          <option>Western Cape</option>
+        </select>
+      </div>
+      <div><label for="postalCode">Postal code</label><input id="postalCode" name="postalCode" inputmode="numeric" autocomplete="postal-code" required pattern="\d{4}" maxlength="4"></div>
+      <div class="full"><button class="btn-primary checkout-submit" id="payBtn" type="submit">Continue to PayFast</button></div>
+    </form>
+    <div class="checkout-error" id="checkoutError" role="alert"></div>
+  </div>
+</main>
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-label="Shopping bag">
+  <div class="drawer-head"><h3>Your bag</h3><button class="drawer-close" id="drawerClose" aria-label="Close bag">&times;</button></div>
+  <div class="drawer-items" id="drawerItems"></div>
+  <div class="drawer-foot">
+    <div class="drawer-subtotal"><span>Subtotal</span><span id="subtotal">R 0</span></div>
+    <button class="drawer-checkout" id="checkoutBtn" disabled>Checkout</button>
+  </div>
+</aside>
+<script src="js/products.js"></script>
+<script src="js/app.js"></script>
+<script src="js/checkout.js"></script>
+</body>
+</html>

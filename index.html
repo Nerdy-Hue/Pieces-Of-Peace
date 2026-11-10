@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PIECES OF PEACE — Metal, worn on purpose</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect fill='%23D8A821' width='16' height='16'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/viewer.css">
+</head>
+<body>
+
+<header>
+  <div class="wrap headerbar">
+    <a href="#" class="logo">PIECES OF PEACE<sup>&trade;</sup></a>
+    <nav id="mainNav">
+      <a href="#shop">Shop</a>
+      <a href="#about">About</a>
+      <a href="#signup">Drop Alerts</a>
+    </nav>
+    <div class="header-tools">
+      <button class="cart-btn" id="cartOpenBtn" aria-haspopup="dialog">Bag <span class="cart-count" id="cartCount">0</span></button>
+      <button class="mobile-nav-toggle" id="navToggle" aria-label="Toggle menu">&#9776;</button>
+    </div>
+  </div>
+</header>
+
+<div class="marquee">
+  <div class="marquee-track">
+    <span>NEW PIECES EVERY DROP &middot; SUPPLIER SHIPS TO YOUR DOOR &middot; 7–21 DAY DELIVERY &middot; TRACKING WHEN IT SHIPS &middot;</span>
+    <span>NEW PIECES EVERY DROP &middot; SUPPLIER SHIPS TO YOUR DOOR &middot; 7–21 DAY DELIVERY &middot; TRACKING WHEN IT SHIPS &middot;</span>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <h1>METAL,<br>WORN ON<br>PURPOSE.</h1>
+      <p class="hero-sub">Watches, chains, earrings, grillz and sets, delivered to your door.</p>
+      <div class="hero-actions">
+        <a href="#shop" class="btn-primary">Shop the collection</a>
+        <a href="#about" class="btn-outline">How it works</a>
+      </div>
+    </div>
+    <div class="hero-art">
+      <div class="tag-chip">DROP 009</div>
+      <div class="hero-photo hero-photo--photo">
+        <img src="img/products/16-iced-arabic-thorn-bezel-watch.jpg" alt="Fully iced watch with Arabic numerals and a thorn bezel">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="shop">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>The Collection</h2>
+      <p>Watches, chains, earrings, grillz and sets. Priced in rand, shipped from our supplier to your door.</p>
+    </div>
+    <div class="category-tabs" role="tablist" aria-label="Filter by category"></div>
+    <div class="grid" id="productGrid"></div>
+    <p id="catEmptyMsg" style="display:none;color:var(--ash-light)">Nothing in this category yet — check back soon.</p>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="wrap about-grid">
+    <div><h2>Picked,<br>not piled on.</h2></div>
+    <div>
+      <p>Every piece is listed with a photo and a plain description, so you know what you are buying.</p>
+      <p>Orders ship from our supplier to your door. That takes longer than a shelf pickup — usually 7 to 21 days — and tracking goes out when it ships.</p>
+      <p>You pay on PayFast. Card numbers are entered there and never reach this site.</p>
+      <div class="about-stats">
+        <div class="stat"><b id="liveCount">23</b><span>Pieces live</span></div>
+        <div class="stat turquoise"><b>7-21 days</b><span>Delivery window</span></div>
+        <div class="stat silver"><b>PayFast</b><span>Cards stay off this site</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section signup" id="signup" style="padding:0">
+  <div class="wrap">
+    <div>
+      <h2>Get the next<br>drop first.</h2>
+      <p>One email, sent only when there's something to say.</p>
+    </div>
+    <div>
+      <form id="signupForm" class="signup-form">
+        <input type="email" placeholder="you@email.com" required aria-label="Email address">
+        <button type="submit">Notify me</button>
+      </form>
+      <div class="signup-msg" id="signupMsg">You're on the list — watch your inbox for the next drop.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-col"><h4>Shop</h4><a href="#shop">Current collection</a></div>
+      <div class="footer-col"><h4>Company</h4><a href="#about">About</a></div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 PIECES OF PEACE. All rights reserved.</span>
+      <span>Prices in ZAR · Payments by PayFast</span>
+    </div>
+  </div>
+</footer>
+
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-label="Shopping bag">
+  <div class="drawer-head"><h3>Your bag</h3><button class="drawer-close" id="drawerClose" aria-label="Close bag">&times;</button></div>
+  <div class="drawer-items" id="drawerItems"></div>
+  <div class="drawer-foot">
+    <div class="drawer-subtotal"><span>Subtotal</span><span id="subtotal">R 0</span></div>
+    <button class="drawer-checkout" id="checkoutBtn">Checkout</button>
+  </div>
+</aside>
+
+<div class="pv-modal-overlay" id="pvModalOverlay">
+  <div class="pv-modal" role="dialog" aria-modal="true" aria-label="Product viewer">
+    <button type="button" class="pv-modal-close" id="pvModalClose" aria-label="Close">&times;</button>
+    <h3 id="pvModalTitle"></h3>
+    <div id="pvModalBody"></div>
+    <p class="pv-modal-note" id="pvModalNote"></p>
+  </div>
+</div>
+
+<script src="js/products.js"></script>
+<script src="js/product-viewer.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
