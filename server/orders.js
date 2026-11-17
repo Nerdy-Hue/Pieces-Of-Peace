@@ -122,6 +122,7 @@ export function priceCart(items, catalogue) {
       id: String(product.id),
       sku: product.sku,
       name: product.name,
+      description: product.description || '',
       qty,
       variant: variant || '',
       unitCents,
@@ -182,6 +183,9 @@ export function publicOrder(order) {
   return {
     id: order.id,
     status: order.status,
+    subtotal: order.subtotal || null,
+    shippingFee: order.shippingFee || null,
+    shippingProvince: order.shippingProvince || null,
     amount: order.amount,
     currency: 'ZAR',
     paidAt: order.paidAt || null,
@@ -200,6 +204,9 @@ export function adminOrder(order) {
     createdAt: order.createdAt,
     paidAt: order.paidAt || null,
     status: order.status,
+    subtotal: order.subtotal || null,
+    shippingFee: order.shippingFee || null,
+    shippingProvince: order.shippingProvince || '',
     amount: order.amount,
     currency: 'ZAR',
     pfPaymentId: order.pfPaymentId || '',
@@ -223,7 +230,8 @@ function csvCell(value) {
 export function ordersToCsv(orders) {
   const header = [
     'order_id', 'created_at', 'paid_at', 'status', 'customer_name', 'email', 'phone',
-    'address', 'items', 'amount_zar', 'payfast_payment_id', 'fulfilled', 'temu_order_number',
+    'address', 'shipping_province', 'items', 'subtotal_zar', 'shipping_zar', 'amount_zar',
+    'payfast_payment_id', 'fulfilled', 'temu_order_number',
     'temu_links', 'supplier_skus',
   ];
   const rows = [header.join(',')];
@@ -246,7 +254,10 @@ export function ordersToCsv(orders) {
       order.customer?.email || '',
       order.customer?.phone || '',
       addressText,
+      order.shippingProvince || address.province || '',
       items,
+      order.subtotal || '',
+      order.shippingFee || '',
       order.amount,
       order.pfPaymentId || '',
       order.fulfilled ? 'yes' : 'no',

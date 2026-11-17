@@ -20,6 +20,8 @@ export function buildAlertText(order) {
   const lines = [
     `Pieces of Peace — paid order ${order.id}`,
     '',
+    order.subtotal ? `Subtotal: R${order.subtotal}` : null,
+    order.shippingFee ? `${order.shippingProvince || 'Delivery'} delivery: R${order.shippingFee}` : null,
     `Amount paid: R${order.amount}`,
     `PayFast payment id: ${order.pfPaymentId || '(missing)'}`,
     '',

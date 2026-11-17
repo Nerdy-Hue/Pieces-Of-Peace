@@ -103,6 +103,38 @@
     const subtotalEl = document.getElementById('subtotal');
     const countEl = document.getElementById('cartCount');
     const checkoutBtn = document.getElementById('checkoutBtn');
+    const bagProvince = document.getElementById('bagProvince');
+    const shippingRow = document.getElementById('shippingRow');
+    const shippingLabel = document.getElementById('shippingLabel');
+    const shippingAmount = document.getElementById('shippingAmount');
+    const bagTotal = document.getElementById('bagTotal');
+    const shipNote = document.getElementById('shipNote');
+    const PROVINCE_KEY = 'pop_province';
+    const shippingConfig = () => window.SHIPPING || { estimate: '7 to 14 business days', zones: [], rates: [] };
+    const quoteProvince = (province) => {
+      const hit = (shippingConfig().rates || []).find((rate) => rate.province === province);
+      return hit ? { fee: hit.fee, label: `${province} delivery` } : null;
+    };
+    const readProvince = () => { try { return localStorage.getItem(PROVINCE_KEY) || ''; } catch (e) { return ''; } };
+    const writeProvince = (value) => {
+      try { localStorage.setItem(PROVINCE_KEY, value || ''); } catch (e) { /* private mode */ }
+      document.dispatchEvent(new CustomEvent('pop:province'));
+    };
+    if (shipNote) {
+      const cfg = shippingConfig();
+      const list = (cfg.zones || []).map((zone) => `${zone.provinces.join(', ')} R${zone.fee}`).join('; ');
+      shipNote.textContent = `${list ? `Delivery is charged by province: ${list}. ` : 'Delivery is charged by province. '}Orders are dropshipped to your address, so delivery usually takes around ${cfg.estimate}. That timing is an estimate.`;
+    }
+    if (bagProvince) {
+      const saved = readProvince();
+      if ([...bagProvince.options].some((option) => option.value === saved)) bagProvince.value = saved;
+      bagProvince.addEventListener('change', () => writeProvince(bagProvince.value));
+      document.addEventListener('pop:province', () => {
+        const next = readProvince();
+        if (bagProvince.value !== next) bagProvince.value = next;
+        renderCart();
+      });
+    }
     const openDrawer = () => { drawer.classList.add('open'); overlay.classList.add('open'); };
     const closeDrawer = () => { drawer.classList.remove('open'); overlay.classList.remove('open'); };
     document.getElementById('cartOpenBtn').addEventListener('click', openDrawer);
@@ -118,23 +150,39 @@
       if (countEl) countEl.textContent = count;
       const payable = cart.length > 0 && cart.every((item) => isForSale(findProduct(item.id)));
       if (checkoutBtn) checkoutBtn.disabled = !payable;
+      const paintTotals = (sum) => {
+        if (subtotalEl) subtotalEl.textContent = money(sum);
+        const quote = cart.length ? quoteProvince(bagProvince ? bagProvince.value : readProvince()) : null;
+        if (quote && shippingRow) {
+          shippingRow.hidden = false;
+          if (shippingLabel) shippingLabel.textContent = quote.label;
+          if (shippingAmount) shippingAmount.textContent = money(quote.fee);
+          if (bagTotal) bagTotal.textContent = money(sum + quote.fee);
+        } else if (shippingRow) {
+          shippingRow.hidden = true;
+          if (bagTotal) bagTotal.textContent = cart.length ? 'Choose a province' : 'R 0';
+        }
+      };
       if (!cart.length) {
         drawerItems.innerHTML = '<p class="drawer-empty">Your bag is empty.</p>';
-        subtotalEl.textContent = 'R 0';
+        paintTotals(0);
         return;
       }
       let sum = 0;
       drawerItems.innerHTML = cart.map((item) => {
         const product = findProduct(item.id);
-        sum += product.price * item.qty;
+        const line = product.price * item.qty;
+        sum += line;
         const variant = item.variant ? ` · ${esc(item.variant)}` : '';
-        return `<div class="drawer-item"><div>
+        const photo = product.image ? `<img src="${esc(product.image)}" alt="">` : '<span></span>';
+        return `<div class="drawer-item">${photo}<div>
           <div class="drawer-item-name">${esc(product.name)}${variant}</div>
+          <div class="drawer-desc">${esc(product.description || '')}</div>
           <div class="drawer-item-price">${item.qty} &times; ${money(product.price)}</div>
           <button class="drawer-remove" data-remove="${esc(product.id)}" data-variant="${esc(item.variant)}">Remove</button>
-        </div></div>`;
+        </div><strong>${money(line)}</strong></div>`;
       }).join('');
-      subtotalEl.textContent = money(sum);
+      paintTotals(sum);
     }
     document.addEventListener('click', (e) => {
       const add = e.target.closest('[data-add]');

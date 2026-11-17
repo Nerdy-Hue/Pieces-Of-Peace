@@ -24,6 +24,34 @@
     errorBox.classList.remove('show');
   }
 
+  const provinceSelect = document.getElementById('province');
+  const PROVINCE_KEY = 'pop_province';
+  const shippingConfig = () => window.SHIPPING || { estimate: '7 to 14 business days', zones: [], rates: [] };
+  const quoteProvince = (province) => {
+    const hit = (shippingConfig().rates || []).find((rate) => rate.province === province);
+    return hit ? { fee: hit.fee, label: `${province} delivery` } : null;
+  };
+  const shippingNote = () => {
+    const cfg = shippingConfig();
+    const list = (cfg.zones || []).map((zone) => `${zone.provinces.join(', ')} R${zone.fee}`).join('; ');
+    return `${list ? `Delivery is charged by province: ${list}. ` : 'Delivery is charged by province. '}Orders are dropshipped to your address, so delivery usually takes around ${cfg.estimate}. That timing is an estimate. You pay on PayFast. Card numbers stay on their site.`;
+  };
+  const savedProvince = () => { try { return localStorage.getItem(PROVINCE_KEY) || ''; } catch (e) { return ''; } };
+  const rememberProvince = (value) => {
+    try { localStorage.setItem(PROVINCE_KEY, value || ''); } catch (e) { /* private mode */ }
+    document.dispatchEvent(new CustomEvent('pop:province'));
+  };
+  if (provinceSelect) {
+    const saved = savedProvince();
+    if ([...provinceSelect.options].some((option) => option.value === saved)) provinceSelect.value = saved;
+    provinceSelect.addEventListener('change', () => rememberProvince(provinceSelect.value));
+    document.addEventListener('pop:province', () => {
+      const next = savedProvince();
+      if (provinceSelect.value !== next) provinceSelect.value = next;
+      render();
+    });
+  }
+
   function render() {
     const cart = readCart().filter((item) => forSale(findProduct(item.id)));
     if (!cart.length) {
@@ -32,7 +60,7 @@
       return;
     }
     let sum = 0;
-    summary.innerHTML = cart.map((item) => {
+    const lines = cart.map((item) => {
       const product = findProduct(item.id);
       const line = product.price * item.qty;
       sum += line;
@@ -40,14 +68,23 @@
       return `<div class="summary-line">
         <img src="${esc(product.image)}" alt="">
         <div><strong>${esc(product.name)}</strong>${variant}
+          <div class="summary-desc">${esc(product.description || '')}</div>
           <div>${item.qty} &times; ${money(product.price)}</div>
           <button type="button" data-remove="${esc(product.id)}" data-variant="${esc(item.variant || '')}">Remove</button>
         </div>
         <strong>${money(line)}</strong>
       </div>`;
-    }).join('') + `<div class="row total"><span>Total</span><span>${money(sum)}</span></div>
-      <p class="pay-note">No delivery fee is added here. PayFast takes the card payment. We never see the card number.</p>`;
-    payBtn.disabled = false;
+    }).join('');
+    const quote = quoteProvince(provinceSelect ? provinceSelect.value : '');
+    const shippingRow = quote
+      ? `<div class="row"><span>${esc(quote.label)}</span><span>${money(quote.fee)}</span></div>`
+      : '<div class="row"><span>Delivery</span><span>Choose a province</span></div>';
+    summary.innerHTML = `${lines}
+      <div class="row"><span>Subtotal</span><span>${money(sum)}</span></div>
+      ${shippingRow}
+      <div class="row total"><span>Total</span><span>${quote ? money(sum + quote.fee) : '—'}</span></div>
+      <p class="summary-note">${esc(shippingNote())}</p>`;
+    payBtn.disabled = !quote;
   }
 
   document.addEventListener('pop:cart', render);

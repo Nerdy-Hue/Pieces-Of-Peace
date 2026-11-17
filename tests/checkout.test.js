@@ -81,7 +81,10 @@ test('checkout total comes from the catalogue and ignores a browser price', asyn
     { id: 20, qty: 1, price: 5 },
   ]);
   assert.equal(result.status, 200);
-  assert.equal(result.body.amount, '1950.00');
+  assert.equal(result.body.subtotal, '1950.00');
+  assert.equal(result.body.shippingFee, '150.00');
+  assert.equal(result.body.shippingProvince, 'Western Cape');
+  assert.equal(result.body.amount, '2100.00');
   assert.equal(result.body.processUrl, 'https://sandbox.payfast.co.za/eng/process');
   const fields = result.body.fields;
   assert.equal(fields.at(-1)[0], 'signature');
@@ -99,6 +102,7 @@ test('checkout total comes from the catalogue and ignores a browser price', asyn
 test('an empty price cannot be bought, and card fields are rejected', async () => {
   const store = memoryStore();
   const catalogue = pricedCatalogue();
+  catalogue.products.find((product) => product.id === 23).price = null;
   const unpriced = await checkout(store, catalogue, [{ id: 23, qty: 1 }]);
   assert.equal(unpriced.status, 400);
   assert.match(unpriced.body.error, /not priced yet/);
@@ -114,7 +118,8 @@ test('an empty price cannot be bought, and card fields are rejected', async () =
   assert.match(missingVariant.body.error, /option/i);
   const chosen = await checkout(store, catalogue, [{ id: 37, qty: 1, variant: 'Gold' }]);
   assert.equal(chosen.status, 200);
-  assert.equal(chosen.body.amount, '800.00');
+  assert.equal(chosen.body.subtotal, '800.00');
+  assert.equal(chosen.body.amount, '950.00');
 });
 
 test('http checkout is refused except on localhost, and live mode requires https and R5', async () => {
@@ -136,15 +141,17 @@ test('http checkout is refused except on localhost, and live mode requires https
   assert.equal(liveLocal.status, 400);
   const cheap = structuredClone(catalogue);
   cheap.products.find((product) => product.id === 21).price = 1;
-  const tooSmall = await createCheckout({
+  const withShipping = await createCheckout({
     body: customerBody([{ id: 21, qty: 1 }]),
     store: memoryStore(),
     env: liveEnv,
     origin: 'https://shop.example',
     catalogue: cheap,
   });
-  assert.equal(tooSmall.status, 400);
-  assert.match(tooSmall.body.error, /R5\.00/);
+  assert.equal(withShipping.status, 200);
+  assert.equal(withShipping.body.subtotal, '1.00');
+  assert.equal(withShipping.body.shippingFee, '150.00');
+  assert.equal(withShipping.body.amount, '151.00');
   const liveOk = await createCheckout({
     body: customerBody([{ id: 21, qty: 1 }]),
     store: memoryStore(),
@@ -176,7 +183,7 @@ test('ITN marks the order paid only after signature, IP, amount and PayFast vali
     ['pf_payment_id', '1089250'],
     ['payment_status', 'COMPLETE'],
     ['item_name', `Pieces of Peace ${orderId}`],
-    ['amount_gross', '500.00'],
+    ['amount_gross', '650.00'],
     ['amount_fee', '-11.50'],
     ['amount_net', '488.50'],
     ['name_first', 'Test'],
@@ -205,7 +212,7 @@ test('ITN marks the order paid only after signature, IP, amount and PayFast vali
     ipAllowed,
   });
 
-  const badSig = await run(formBody(basePairs, env.PAYFAST_PASSPHRASE).replace('amount_gross=500.00', 'amount_gross=500.01'));
+  const badSig = await run(formBody(basePairs, env.PAYFAST_PASSPHRASE).replace('amount_gross=650.00', 'amount_gross=650.01'));
   assert.equal(badSig.reason, 'bad-signature');
   assert.equal(calls.length, 0);
   assert.equal((await store.get(orderId)).status, 'pending');
@@ -217,6 +224,9 @@ test('ITN marks the order paid only after signature, IP, amount and PayFast vali
   const wrongGross = basePairs.map(([key, value]) => (key === 'amount_gross' ? [key, '1.00'] : [key, value]));
   const mismatch = await run(formBody(wrongGross, env.PAYFAST_PASSPHRASE));
   assert.equal(mismatch.reason, 'amount-mismatch');
+  const goodsOnly = basePairs.map(([key, value]) => (key === 'amount_gross' ? [key, '500.00'] : [key, value]));
+  const shortPay = await run(formBody(goodsOnly, env.PAYFAST_PASSPHRASE));
+  assert.equal(shortPay.reason, 'amount-mismatch');
   assert.equal(calls.length, 0);
 
   const wrongMerchant = basePairs.map(([key, value]) => (key === 'merchant_id' ? [key, '99999999'] : [key, value]));
@@ -254,7 +264,7 @@ test('ITN marks the order paid only after signature, IP, amount and PayFast vali
   assert.equal(paid.reason, 'paid');
   assert.equal(calls[0].url, 'https://sandbox.payfast.co.za/eng/query/validate');
   assert.doesNotMatch(calls[0].body, /passphrase|signature/);
-  assert.match(calls[0].body, /amount_gross=500\.00/);
+  assert.match(calls[0].body, /amount_gross=650\.00/);
   const order = await store.get(orderId);
   assert.equal(order.status, 'paid');
   assert.equal(order.pfPaymentId, '1089250');
@@ -264,7 +274,8 @@ test('ITN marks the order paid only after signature, IP, amount and PayFast vali
   assert.match(sent[0], /1 Long Street/);
   assert.match(sent[0], /buyer@example.com/);
   assert.match(sent[0], /1089250/);
-  assert.match(sent[0], /R500\.00/);
+  assert.match(sent[0], /Western Cape delivery: R150\.00/);
+  assert.match(sent[0], /R650\.00/);
   assert.match(sent[0], /TM-21/);
   const visible = JSON.stringify(publicOrder(order));
   assert.doesNotMatch(visible, /temu|buyer@example.com|TM-21|Long Street/i);
@@ -282,7 +293,7 @@ test('a cancelled ITN does not mark the order paid or email the owner', async ()
     ['m_payment_id', created.body.orderId],
     ['pf_payment_id', '55'],
     ['payment_status', 'CANCELLED'],
-    ['amount_gross', '500.00'],
+    ['amount_gross', '650.00'],
     ['merchant_id', '10000100'],
   ];
   let emails = 0;
@@ -320,14 +331,16 @@ test('the HTTP API hides supplier data, ignores forwarded IP spoofing, and guard
   });
   assert.equal(created.status, 200);
   const createdBody = await created.json();
-  assert.equal(createdBody.amount, '500.00');
+  assert.equal(createdBody.subtotal, '500.00');
+  assert.equal(createdBody.shippingFee, '150.00');
+  assert.equal(createdBody.amount, '650.00');
 
   const seen = [];
   const spoofBody = formBody([
     ['m_payment_id', createdBody.orderId],
     ['pf_payment_id', '1'],
     ['payment_status', 'COMPLETE'],
-    ['amount_gross', '500.00'],
+    ['amount_gross', '650.00'],
     ['merchant_id', env.PAYFAST_MERCHANT_ID],
   ], env.PAYFAST_PASSPHRASE);
   const spoof = await handleApi(new Request(`${origin}/api/payfast/itn`, {
@@ -376,7 +389,7 @@ test('the HTTP API hides supplier data, ignores forwarded IP spoofing, and guard
     ['m_payment_id', createdBody.orderId],
     ['pf_payment_id', '777'],
     ['payment_status', 'COMPLETE'],
-    ['amount_gross', '500.00'],
+    ['amount_gross', '650.00'],
     ['merchant_id', env.PAYFAST_MERCHANT_ID],
   ];
   const itn = await handleApi(new Request(`${origin}/api/payfast/itn`, {

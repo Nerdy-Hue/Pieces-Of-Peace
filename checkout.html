@@ -64,7 +64,18 @@
   <div class="drawer-head"><h3>Your bag</h3><button class="drawer-close" id="drawerClose" aria-label="Close bag">&times;</button></div>
   <div class="drawer-items" id="drawerItems"></div>
   <div class="drawer-foot">
+    <label class="bag-province">Delivery province
+      <select id="bagProvince" aria-label="Delivery province">
+        <option value="">Choose</option>
+        <option>Eastern Cape</option><option>Free State</option><option>Gauteng</option>
+        <option>KwaZulu-Natal</option><option>Limpopo</option><option>Mpumalanga</option>
+        <option>Northern Cape</option><option>North West</option><option>Western Cape</option>
+      </select>
+    </label>
     <div class="drawer-subtotal"><span>Subtotal</span><span id="subtotal">R 0</span></div>
+    <div class="drawer-subtotal" id="shippingRow" hidden><span id="shippingLabel">Delivery</span><span id="shippingAmount"></span></div>
+    <div class="drawer-subtotal drawer-total"><span>Total</span><span id="bagTotal">R 0</span></div>
+    <p class="ship-note" id="shipNote">Delivery is charged by province. Orders are dropshipped, so delivery usually takes around 7 to 14 business days. That timing is an estimate.</p>
     <button class="drawer-checkout" id="checkoutBtn" disabled>Checkout</button>
   </div>
 </aside>

@@ -68,7 +68,7 @@
         </div>
         <p class="admin-meta">${esc(order.customer.name)} · ${esc(order.customer.email)} · ${esc(order.customer.phone)}</p>
         <p class="admin-meta">${esc(address(order.customer))}</p>
-        <p class="admin-meta">Paid ${esc(order.amount)} ZAR · PayFast payment id ${esc(order.pfPaymentId || '—')} · ${esc(alert)}</p>
+        <p class="admin-meta">Subtotal R${esc(order.subtotal || '—')} · ${esc(order.shippingProvince || 'Delivery')} delivery R${esc(order.shippingFee || '—')} · Paid R${esc(order.amount)} · PayFast ${esc(order.pfPaymentId || '—')} · ${esc(alert)}</p>
         <ul class="admin-items">${items}</ul>
         <form class="admin-actions">
           <label><input type="checkbox" name="fulfilled" ${order.fulfilled ? 'checked' : ''}> Fulfilled on Temu</label>

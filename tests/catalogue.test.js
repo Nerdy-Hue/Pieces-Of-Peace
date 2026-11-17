@@ -19,13 +19,18 @@ test('the catalogue keeps the three priced pieces and adds the twenty photos', (
   assert.equal(byId.get(22).price, 500);
   const fresh = products.filter((product) => product.id >= 23);
   assert.equal(fresh.length, 20);
-  assert.ok(fresh.every((product) => product.price === null));
+  assert.equal(byId.get(23).price, 329);
+  assert.equal(byId.get(23).temuCost, 127.69);
+  assert.equal(byId.get(42).price, 1129);
+  assert.equal(byId.get(42).temuCost, 449);
+  assert.ok(fresh.every((product) => typeof product.price === 'number' && product.price > 0));
+  assert.ok(fresh.every((product) => typeof product.temuCost === 'number' && product.temuCost > 0));
   assert.ok(fresh.every((product) => product.image.startsWith('img/products/')));
   assert.ok(fresh.every((product) => existsSync(path.join(root, product.image))));
   for (const product of products) {
     assert.equal(product.temuUrl, '');
-    assert.equal(product.temuCost, null);
     assert.equal(product.supplierSku, '');
+    if (product.id <= 22) assert.equal(product.temuCost, null);
     assert.equal('temuUrl' in toPublicProduct(product), false);
     assert.equal('supplierSku' in toPublicProduct(product), false);
     assert.equal('supplierNotes' in toPublicProduct(product), false);

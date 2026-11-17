@@ -1,0 +1,9 @@
+{
+  "estimate": "7 to 14 business days",
+  "rates": [
+    { "fee": 50, "provinces": ["Gauteng"] },
+    { "fee": 100, "provinces": ["North West", "Free State", "Limpopo", "Mpumalanga"] },
+    { "fee": 120, "provinces": ["KwaZulu-Natal"] },
+    { "fee": 150, "provinces": ["Eastern Cape", "Northern Cape", "Western Cape"] }
+  ]
+}

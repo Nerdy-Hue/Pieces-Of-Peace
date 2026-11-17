@@ -1,6 +1,5 @@
-/* Generated from data/catalogue.json. Edit that file, then run npm run build.
-   Prices live there. Supplier fields (Temu URL, cost, SKU, notes) are not in this file
-   and are never sent to the browser. */
+/* Generated from data/catalogue.json and data/shipping.json. Edit those files, then run npm run build.
+   Prices and delivery rates live there. Supplier fields are not in this file. */
 window.PRODUCTS = [
   {
     "id": 20,
@@ -44,7 +43,7 @@ window.PRODUCTS = [
     "name": "Matte Black Octagon",
     "category": "watches",
     "description": "A matte black minimalist watch with a sharp octagonal case.",
-    "price": null,
+    "price": 329,
     "stock": null,
     "image": "img/products/01-matte-black-minimalist-watch.jpg",
     "angles": [],
@@ -56,7 +55,7 @@ window.PRODUCTS = [
     "name": "Matte White Minimal",
     "category": "watches",
     "description": "A matte white minimalist watch with a clean, quiet face.",
-    "price": null,
+    "price": 329,
     "stock": null,
     "image": "img/products/02-matte-white-minimalist-watch.jpg",
     "angles": [],
@@ -68,7 +67,7 @@ window.PRODUCTS = [
     "name": "Pintime Iced Silver",
     "category": "watches",
     "description": "An iced silver Pintime watch with a black glitter dial.",
-    "price": null,
+    "price": 499,
     "stock": null,
     "image": "img/products/03-pintime-iced-silver-watch.jpg",
     "angles": [],
@@ -80,7 +79,7 @@ window.PRODUCTS = [
     "name": "Sterling Silver Hoop",
     "category": "earrings",
     "description": "A plain polished 925 sterling silver hoop earring.",
-    "price": null,
+    "price": 89,
     "stock": null,
     "image": "img/products/04-sterling-silver-hoop-earring.jpg",
     "angles": [],
@@ -92,7 +91,7 @@ window.PRODUCTS = [
     "name": "Silver Franco Chain",
     "category": "chains",
     "description": "An S925 silver Franco chain in a tight wheat weave.",
-    "price": null,
+    "price": 169,
     "stock": null,
     "image": "img/products/05-s925-silver-franco-chain.jpg",
     "angles": [],
@@ -104,7 +103,7 @@ window.PRODUCTS = [
     "name": "Silver Fang Grillz",
     "category": "grillz",
     "description": "Polished silver vampire fang grillz, top and bottom.",
-    "price": null,
+    "price": 329,
     "stock": null,
     "image": "img/products/06-polished-silver-fang-grillz.jpg",
     "angles": [],
@@ -116,7 +115,7 @@ window.PRODUCTS = [
     "name": "Black Flame Claw",
     "category": "watches",
     "description": "A black gothic flame-claw watch with a cross on the dial.",
-    "price": null,
+    "price": 559,
     "stock": null,
     "image": "img/products/07-black-flame-claw-watch.jpg",
     "angles": [],
@@ -128,7 +127,7 @@ window.PRODUCTS = [
     "name": "Poedagar Teal Dial",
     "category": "watches",
     "description": "A silver Poedagar watch with a teal sunburst dial.",
-    "price": null,
+    "price": 629,
     "stock": null,
     "image": "img/products/08-poedagar-teal-dial-watch.jpg",
     "angles": [],
@@ -140,7 +139,7 @@ window.PRODUCTS = [
     "name": "Star & Heart Cuffs",
     "category": "earrings",
     "description": "A two-piece silver ear cuff set: one star, one heart.",
-    "price": null,
+    "price": 99,
     "stock": null,
     "image": "img/products/09-star-heart-ear-cuff-set.jpg",
     "angles": [],
@@ -152,7 +151,7 @@ window.PRODUCTS = [
     "name": "Silver Curb Chain",
     "category": "chains",
     "description": "A polished S925 silver curb chain.",
-    "price": null,
+    "price": 169,
     "stock": null,
     "image": "img/products/10-s925-silver-curb-chain.jpg",
     "angles": [],
@@ -164,7 +163,7 @@ window.PRODUCTS = [
     "name": "Cross Drop Huggies",
     "category": "earrings",
     "description": "925 huggie hoops with CZ cross drops.",
-    "price": null,
+    "price": 129,
     "stock": null,
     "image": "img/products/11-cz-cross-drop-huggie-earrings.jpg",
     "angles": [],
@@ -176,7 +175,7 @@ window.PRODUCTS = [
     "name": "Pavé Oval Hoops",
     "category": "earrings",
     "description": "S925 oval hoops lined with pavé-set CZ stones.",
-    "price": null,
+    "price": 389,
     "stock": null,
     "image": "img/products/12-s925-pave-oval-hoop-earrings.jpg",
     "angles": [],
@@ -188,7 +187,7 @@ window.PRODUCTS = [
     "name": "Red Flame Claw",
     "category": "watches",
     "description": "A black flame-claw watch with a deep red dial.",
-    "price": null,
+    "price": 559,
     "stock": null,
     "image": "img/products/13-black-flame-claw-red-dial-watch.jpg",
     "angles": [],
@@ -200,7 +199,7 @@ window.PRODUCTS = [
     "name": "Iced Cuban Combo",
     "category": "sets",
     "description": "An iced Cuban link chain and matching bracelet.",
-    "price": null,
+    "price": 899,
     "stock": null,
     "image": "img/products/14-iced-cuban-link-chain-bracelet-set.jpg",
     "angles": [],
@@ -212,7 +211,7 @@ window.PRODUCTS = [
     "name": "Iced CZ Grillz",
     "category": "grillz",
     "description": "Iced CZ grillz, sold as a gold set or a silver set.",
-    "price": null,
+    "price": 519,
     "stock": null,
     "image": "img/products/15-iced-cz-grillz-gold-and-silver.jpg",
     "angles": [],
@@ -227,7 +226,7 @@ window.PRODUCTS = [
     "name": "Thorn Bezel Iced",
     "category": "watches",
     "description": "A fully iced watch with Arabic numerals and a thorn bezel.",
-    "price": null,
+    "price": 1029,
     "stock": null,
     "image": "img/products/16-iced-arabic-thorn-bezel-watch.jpg",
     "angles": [],
@@ -239,7 +238,7 @@ window.PRODUCTS = [
     "name": "Gold Flower Grillz",
     "category": "grillz",
     "description": "Gold hollow grillz shaped like a row of flowers.",
-    "price": null,
+    "price": 339,
     "stock": null,
     "image": "img/products/17-gold-hollow-flower-grillz.jpg",
     "angles": [],
@@ -251,7 +250,7 @@ window.PRODUCTS = [
     "name": "Geneva Night Set",
     "category": "sets",
     "description": "Men's gift set: black Geneva mesh watch, Cuban bracelet, ring and pendant.",
-    "price": null,
+    "price": 209,
     "stock": null,
     "image": "img/products/18-black-geneva-watch-gift-set.jpg",
     "angles": [],
@@ -263,7 +262,7 @@ window.PRODUCTS = [
     "name": "Gold Jesus Piece Set",
     "category": "sets",
     "description": "A gold Jesus-piece watch set with rope and bead bracelets.",
-    "price": null,
+    "price": 589,
     "stock": null,
     "image": "img/products/19-gold-jesus-watch-bracelet-set.jpg",
     "angles": [],
@@ -275,7 +274,7 @@ window.PRODUCTS = [
     "name": "Iced Cuban Cross Set",
     "category": "sets",
     "description": "Men's gift set: iced Cuban chain and bracelet, iced cross pendant and studs.",
-    "price": null,
+    "price": 1129,
     "stock": null,
     "image": "img/products/20-iced-cuban-cross-gift-set.jpg",
     "angles": [],
@@ -315,3 +314,76 @@ window.CATEGORIES = [
     "badge": "SET"
   }
 ];
+
+window.SHIPPING = {
+  "estimate": "7 to 14 business days",
+  "zones": [
+    {
+      "fee": 50,
+      "provinces": [
+        "Gauteng"
+      ]
+    },
+    {
+      "fee": 100,
+      "provinces": [
+        "North West",
+        "Free State",
+        "Limpopo",
+        "Mpumalanga"
+      ]
+    },
+    {
+      "fee": 120,
+      "provinces": [
+        "KwaZulu-Natal"
+      ]
+    },
+    {
+      "fee": 150,
+      "provinces": [
+        "Eastern Cape",
+        "Northern Cape",
+        "Western Cape"
+      ]
+    }
+  ],
+  "rates": [
+    {
+      "province": "Gauteng",
+      "fee": 50
+    },
+    {
+      "province": "North West",
+      "fee": 100
+    },
+    {
+      "province": "Free State",
+      "fee": 100
+    },
+    {
+      "province": "Limpopo",
+      "fee": 100
+    },
+    {
+      "province": "Mpumalanga",
+      "fee": 100
+    },
+    {
+      "province": "KwaZulu-Natal",
+      "fee": 120
+    },
+    {
+      "province": "Eastern Cape",
+      "fee": 150
+    },
+    {
+      "province": "Northern Cape",
+      "fee": 150
+    },
+    {
+      "province": "Western Cape",
+      "fee": 150
+    }
+  ]
+};

@@ -2,6 +2,7 @@ import { getCatalogue } from './catalogue.js';
 import { checkOrigin } from './env.js';
 import { checkStock, hasCardFields, newOrderId, priceCart, validateCustomer } from './orders.js';
 import { CHECKOUT_FIELD_ORDER, formatAmount, payfastHosts, signPairs } from './payfast.js';
+import { shippingForProvince } from './shipping.js';
 
 const MAX_CENTS = 100_000_000;
 
@@ -83,18 +84,22 @@ export async function createCheckout({
   const priced = priceCart(body.items, catalogue);
   if (!priced.ok) return { status: priced.status, body: { error: priced.error } };
 
+  const shipping = shippingForProvince(customerResult.customer.address.province);
+  if (!shipping) return { status: 400, body: { error: 'Choose a delivery province.' } };
+
   const existing = await store.list();
   const stockError = checkStock(priced.lines, existing, catalogue, now);
   if (stockError) return { status: 409, body: { error: stockError } };
 
+  const totalCents = priced.totalCents + shipping.feeCents;
   const minimum = env.PAYFAST_MODE === 'live' ? 500 : 1;
-  if (priced.totalCents < minimum) {
+  if (totalCents < minimum) {
     const error = env.PAYFAST_MODE === 'live'
       ? 'PayFast live payments must be at least R5.00.'
       : 'Order total must be greater than zero.';
     return { status: 400, body: { error } };
   }
-  if (priced.totalCents > MAX_CENTS) {
+  if (totalCents > MAX_CENTS) {
     return { status: 400, body: { error: 'That order is larger than we can take online.' } };
   }
 
@@ -102,7 +107,10 @@ export async function createCheckout({
     id: newOrderId(),
     createdAt: now.toISOString(),
     status: 'pending',
-    amount: formatAmount(priced.totalCents),
+    subtotal: formatAmount(priced.totalCents),
+    shippingFee: formatAmount(shipping.feeCents),
+    shippingProvince: shipping.province,
+    amount: formatAmount(totalCents),
     currency: 'ZAR',
     customer: customerResult.customer,
     items: priced.lines,
@@ -128,12 +136,17 @@ export async function createCheckout({
     status: 200,
     body: {
       orderId: order.id,
+      subtotal: order.subtotal,
+      shippingFee: order.shippingFee,
+      shippingProvince: order.shippingProvince,
+      shippingLabel: shipping.label,
       amount: order.amount,
       currency: 'ZAR',
       processUrl,
       fields,
       items: order.items.map((item) => ({
         name: item.name,
+        description: item.description,
         qty: item.qty,
         variant: item.variant,
         lineTotal: formatAmount(item.lineCents),

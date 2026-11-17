@@ -4,6 +4,7 @@
  */
 
 import catalogue from '../data/catalogue.json' with { type: 'json' };
+import { publicShipping } from './shipping.js';
 
 export const PUBLIC_PRODUCT_KEYS = [
   'id',
@@ -57,12 +58,13 @@ export function toPublicCatalogue(source = getCatalogue()) {
 
 export function renderProductsJs(source = getCatalogue()) {
   const pub = toPublicCatalogue(source);
-  return `/* Generated from data/catalogue.json. Edit that file, then run npm run build.
-   Prices live there. Supplier fields (Temu URL, cost, SKU, notes) are not in this file
-   and are never sent to the browser. */
+  return `/* Generated from data/catalogue.json and data/shipping.json. Edit those files, then run npm run build.
+   Prices and delivery rates live there. Supplier fields are not in this file. */
 window.PRODUCTS = ${JSON.stringify(pub.products, null, 2)};
 
 window.CATEGORIES = ${JSON.stringify(pub.categories, null, 2)};
+
+window.SHIPPING = ${JSON.stringify(publicShipping(), null, 2)};
 `;
 }
 

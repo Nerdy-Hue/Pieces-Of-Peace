@@ -30,8 +30,8 @@
 
 <div class="marquee">
   <div class="marquee-track">
-    <span>NEW PIECES EVERY DROP &middot; SUPPLIER SHIPS TO YOUR DOOR &middot; 7–21 DAY DELIVERY &middot; TRACKING WHEN IT SHIPS &middot;</span>
-    <span>NEW PIECES EVERY DROP &middot; SUPPLIER SHIPS TO YOUR DOOR &middot; 7–21 DAY DELIVERY &middot; TRACKING WHEN IT SHIPS &middot;</span>
+    <span>NEW PIECES EVERY DROP &middot; SUPPLIER SHIPS TO YOUR DOOR &middot; DELIVERY ABOUT 7–14 BUSINESS DAYS &middot; TRACKING WHEN IT SHIPS &middot;</span>
+    <span>NEW PIECES EVERY DROP &middot; SUPPLIER SHIPS TO YOUR DOOR &middot; DELIVERY ABOUT 7–14 BUSINESS DAYS &middot; TRACKING WHEN IT SHIPS &middot;</span>
   </div>
 </div>
 
@@ -71,11 +71,11 @@
     <div><h2>Picked,<br>not piled on.</h2></div>
     <div>
       <p>Every piece is listed with a photo and a plain description, so you know what you are buying.</p>
-      <p>Orders ship from our supplier to your door. That takes longer than a shelf pickup — usually 7 to 21 days — and tracking goes out when it ships.</p>
+      <p>Orders are dropshipped from our supplier to your door. Delivery usually takes around 7 to 14 business days. That timing is an estimate, and tracking goes out when it ships.</p>
       <p>You pay on PayFast. Card numbers are entered there and never reach this site.</p>
       <div class="about-stats">
         <div class="stat"><b id="liveCount">23</b><span>Pieces live</span></div>
-        <div class="stat turquoise"><b>7-21 days</b><span>Delivery window</span></div>
+        <div class="stat turquoise"><b>7–14 days</b><span>Delivery estimate</span></div>
         <div class="stat silver"><b>PayFast</b><span>Cards stay off this site</span></div>
       </div>
     </div>
@@ -116,7 +116,18 @@
   <div class="drawer-head"><h3>Your bag</h3><button class="drawer-close" id="drawerClose" aria-label="Close bag">&times;</button></div>
   <div class="drawer-items" id="drawerItems"></div>
   <div class="drawer-foot">
+    <label class="bag-province">Delivery province
+      <select id="bagProvince" aria-label="Delivery province">
+        <option value="">Choose</option>
+        <option>Eastern Cape</option><option>Free State</option><option>Gauteng</option>
+        <option>KwaZulu-Natal</option><option>Limpopo</option><option>Mpumalanga</option>
+        <option>Northern Cape</option><option>North West</option><option>Western Cape</option>
+      </select>
+    </label>
     <div class="drawer-subtotal"><span>Subtotal</span><span id="subtotal">R 0</span></div>
+    <div class="drawer-subtotal" id="shippingRow" hidden><span id="shippingLabel">Delivery</span><span id="shippingAmount"></span></div>
+    <div class="drawer-subtotal drawer-total"><span>Total</span><span id="bagTotal">R 0</span></div>
+    <p class="ship-note" id="shipNote">Delivery is charged by province. Orders are dropshipped, so delivery usually takes around 7 to 14 business days. That timing is an estimate.</p>
     <button class="drawer-checkout" id="checkoutBtn">Checkout</button>
   </div>
 </aside>

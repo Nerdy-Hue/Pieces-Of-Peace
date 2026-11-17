@@ -97,14 +97,22 @@ Edit **`data/catalogue.json`** only, then run `npm run build` (Netlify runs this
 
 `js/products.js` is generated. A hand-edit there is overwritten on the next build, and the server will not see it.
 
-There is no delivery fee on the order. You pay Temu's shipping when you place the supplier order. The old "free shipping over R1,000" line was removed so the site doesn't promise a rule it doesn't charge.
+## Delivery fees
+
+Edit **`data/shipping.json`**. The server adds the fee for the checkout province to the PayFast amount. A delivery fee sent by the browser is ignored, and the ITN amount check uses the same total.
+
+Gauteng R50. North West, Free State, Limpopo and Mpumalanga R100. KwaZulu-Natal R120. Eastern Cape, Northern Cape and Western Cape R150. Orders are dropshipped, so the shop says delivery usually takes around 7 to 14 business days and labels that as an estimate (`estimate` in the same file). Run `npm run build` after editing it.
+
+The province and delivery fee are stored on the order and shown in the owner email, on `/admin.html`, and in the CSV.
+
+The `temuCost` figures on the 20 new pieces are estimates from comparable listings, not live Temu prices. Temu blocked the lookups, so check them on temu.com/za before you order. `temuUrl` is still empty for you to fill in.
 
 The six icon-only sample products in the original demo (plain Cuban link, curb bracelet, signet ring, hoop earrings, Figaro chain, stacking rings) were not part of the photographed catalogue and are not listed. Add them in `data/catalogue.json` if you still sell them.
 
 ## Order and fulfilment
 
 1. The shopper fills name, email, phone and a South African address, then continues to PayFast.
-2. The server prices the bag from `data/catalogue.json`, stores a **pending** order, and signs the PayFast form. A price sent by the browser is ignored.
+2. The server prices the bag from `data/catalogue.json`, adds delivery from `data/shipping.json`, stores a **pending** order, and signs the PayFast form. A price or delivery fee sent by the browser is ignored.
 3. PayFast `POST`s the ITN to `/api/payfast/itn`. The function checks the signature (with the passphrase), the source IP against [PayFast's published ranges](https://developers.payfast.co.za/docs/#ports_and_ip_addresses) (and, if needed, the PayFast hostnames), that `amount_gross` matches the stored total, then `POST`s the payload to PayFast's validate endpoint and requires the body `VALID`. `payment_status` must be `COMPLETE`.
 4. The order is marked **paid**, the latest Temu fields are copied onto it, and an email goes to `ORDER_ALERT_EMAIL` with the product, quantity, variant, customer name, shipping address, email, phone, amount paid, PayFast payment id, and each Temu link. If mail isn't configured, the order is still saved and `/admin.html` shows that the email was not sent.
 5. Open `/admin.html`, sign in, and for each paid order place it on Temu to the customer's address. Tick **Fulfilled on Temu**, enter the Temu order number, and save. **Download CSV** exports the same paid orders.
